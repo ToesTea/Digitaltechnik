@@ -1,9 +1,8 @@
-let isValid;
-let resultArray = []; // Declare resultArray outside of the validInput function
+var isValid;
+var resultArray = []; // Declare resultArray outside of the validInput function
 
 document.addEventListener("DOMContentLoaded", function () {
-  const eArray = [];
-  const binArray = [];
+  var binArray = [];
 
   // Part 1
   binArray.push([
@@ -93,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
   console.log(binArray[4]); // Output: [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0] (Part 5)
 
   function handleInputChange() {
-    const inputValue = document.getElementById("connectionInput").value;
+    var inputValue = document.getElementById("connectionInput").value;
     if (!inputValue) {
       document.getElementById("ball").style.backgroundColor = "gray";
       isValid = false;
@@ -105,24 +104,24 @@ document.addEventListener("DOMContentLoaded", function () {
   handleInputChange();
 
   document
-      .getElementById("connectionInput")
-      .addEventListener("input", handleInputChange);
+    .getElementById("connectionInput")
+    .addEventListener("input", handleInputChange);
 
   function validInput(inputValue) {
-    const valid = /^([0-9!&|\\/\-$() eE]+)$/; // Regular expression to match valid input format
-    const operationsOnly = inputValue.replace(/[^!&|\\/\-$()]/g, ""); // Extract operations only
-    const positionsOnly = inputValue.replace(/[^Ee0-9]/g, "").toUpperCase(); // Extract positions only
-    const positionsArray = positionsOnly.split("E").filter(Boolean).map(Number); // Convert positions string to array of numbers
+    var valid = /^([0-9!&|\\/\-$() eE]+)$/; // Regular expression to match valid input format
+    var operationsOnly = inputValue.replace(/[^!&|\\/\-$()]/g, ""); // Extract operations only
+    var positionsOnly = inputValue.replace(/[^Ee0-9]/g, "").toUpperCase(); // Extract positions only
+    var positionsArray = positionsOnly.split("E").filter(Boolean).map(Number); // Convert positions string to array of numbers
 
     if (valid.test(inputValue)) {
       document.getElementById("ball").style.backgroundColor = "green";
       isValid = true;
 
-      let result = binArray[eArray[positionsArray[0] - 1] - 1]; // Initialize result with the binary array of the first position
+      var result = binArray[eArray[positionsArray[0] - 1] - 1]; // Initialize result with the binary array of the first position
 
-      for (let i = 0; i < operationsOnly.length; i++) {
-        const operation = operationsOnly[i];
-        const position = eArray[positionsArray[i + 1] - 1] - 1; // Adjust position to 0-based index
+      for (var i = 0; i < operationsOnly.length; i++) {
+        var operation = operationsOnly[i];
+        var position = eArray[positionsArray[i + 1] - 1] - 1; // Adjust position to 0-based index
 
         switch (operation) {
           case "!":
@@ -131,27 +130,39 @@ document.addEventListener("DOMContentLoaded", function () {
             break;
           case "&":
             // AND operation
-            result = result.map((bit, index) => bit && binArray[position][index]);
+            result = result.map(
+              (bit, index) => bit && binArray[position][index],
+            );
             break;
           case "|":
             // OR operation
-            result = result.map((bit, index) => bit || binArray[position][index]);
+            result = result.map(
+              (bit, index) => bit || binArray[position][index],
+            );
             break;
           case "\\":
             // NOR operation
-            result = result.map((bit, index) => !(bit || binArray[position][index]));
+            result = result.map(
+              (bit, index) => !(bit || binArray[position][index]),
+            );
             break;
           case "/":
             // XOR operation
-            result = result.map((bit, index) => bit !== binArray[position][index]);
+            result = result.map(
+              (bit, index) => bit !== binArray[position][index],
+            );
             break;
           case "-":
             // XNOR operation
-            result = result.map((bit, index) => bit === binArray[position][index]);
+            result = result.map(
+              (bit, index) => bit === binArray[position][index],
+            );
             break;
           case "$":
             // NAND operation
-            result = result.map((bit, index) => !(bit && binArray[position][index]));
+            result = result.map(
+              (bit, index) => !(bit && binArray[position][index]),
+            );
             break;
           default:
             break;
@@ -166,50 +177,46 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log(resultArray);
   }
 
+  // Create a paragraph for the output text
+  var outputParagraph = document.createElement("p");
+  outputParagraph.setAttribute("id", "outputText");
+  document.body.appendChild(outputParagraph);
+
   document.getElementById("submit").addEventListener("click", function () {
+    var outputText = document.getElementById("outputText");
+
     if (isValid) {
       console.log("Connection successful");
 
-      // Display the final bit combination on the website
-      const bitCombinationContainer = document.createElement("div");
-      bitCombinationContainer.setAttribute("id", "bitCombinationContainer");
-
-      // Get the input value
-      const inputValue = document.getElementById("connectionInput").value;
-
-      // Create a paragraph for the input value
-      const bitParagraph = document.createElement("p");
-
       // Convert boolean values in resultArray[0] to 0s and 1s
-      const resultInBinary = resultArray[0].map(value => value ? 1 : 0);
+      var resultInBinary = resultArray[0].map((value) => (value ? 1 : 0));
 
-      bitParagraph.textContent = inputValue + ": " + resultInBinary;
-      bitCombinationContainer.appendChild(bitParagraph);
-
-      document.body.appendChild(bitCombinationContainer);
+      outputText.textContent = "Output: " + resultInBinary;
+      outputText.style.display = "block"; // Show the output text
     } else {
       console.log("Connection failed");
+      outputText.style.display = "none"; // Hide the output text
     }
   });
 
+  var eArray = [];
 
   function pictureRandomizer() {
-    let i;
-    const numbers = [1, 2, 3, 4, 5];
+    var numbers = [1, 2, 3, 4, 5];
 
     // Shuffle the array
-    for (i = numbers.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
+    for (var i = numbers.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
       [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
     }
 
     // Join the shuffled numbers into a single string
-    const shuffledString = numbers.join("");
+    var shuffledString = numbers.join("");
     console.log(shuffledString);
 
     // Display images based on the shuffled order
-    for (i = 0; i < shuffledString.length; i++) {
-      const img = document.createElement("img");
+    for (var i = 0; i < shuffledString.length; i++) {
+      var img = document.createElement("img");
       img.src = `img/${shuffledString[i]}.png`;
       document.body.appendChild(img);
       linking(shuffledString[i]);
