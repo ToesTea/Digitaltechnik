@@ -1,95 +1,27 @@
 var isValid;
 var resultArray = []; // Declare resultArray outside of the validInput function
+var binArrayResult = [];
 
 document.addEventListener("DOMContentLoaded", function () {
-  var binArray = [];
+  let binArray = [
+    "011110000001",
+    "001100011111",
+    "111000111111",
+    "000000000111",
+    "000000001100",
+  ].map((binaryString) => binaryString.split("").map((bit) => bit === "1"));
 
-  // Part 1
-  binArray.push([
-    false,
-    true,
-    true,
-    true,
-    true,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    true,
-  ]);
+  console.log(binArray);
 
-  // Part 2
-  binArray.push([
-    false,
-    false,
-    true,
-    true,
-    false,
-    false,
-    false,
-    true,
-    true,
-    true,
-    true,
-    true,
-  ]);
+  let array = [
+    "01010101010101010101010101010101",
+    "00110011001100110011001100110011",
+    "00001111000011110000111100001111",
+    "00000000111111110000000011111111",
+    "00000000000000001111111111111111",
+  ].map((binaryString) => binaryString.split("").map((bit) => bit === "1"));
 
-  // Part 3
-  binArray.push([
-    true,
-    true,
-    true,
-    false,
-    false,
-    false,
-    true,
-    true,
-    true,
-    true,
-    true,
-    true,
-  ]);
-
-  // Part 4
-  binArray.push([
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    true,
-    true,
-    true,
-  ]);
-
-  // Part 5
-  binArray.push([
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    true,
-    true,
-    false,
-    false,
-  ]);
-
-  // Accessing values
-  console.log(binArray[0]); // Output: [0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1] (Part 1)
-  console.log(binArray[1]); // Output: [0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1] (Part 2)
-  console.log(binArray[2]); // Output: [1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1] (Part 3)
-  console.log(binArray[3]); // Output: [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1] (Part 4)
-  console.log(binArray[4]); // Output: [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0] (Part 5)
+  console.log(array);
 
   function handleInputChange() {
     var inputValue = document.getElementById("connectionInput").value;
@@ -118,6 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
       isValid = true;
 
       var result = binArray[eArray[positionsArray[0] - 1] - 1]; // Initialize result with the binary array of the first position
+      var binResult = array[eArray[positionsArray[0] - 1] - 1]; // Initialize result with the binary array of the first position
 
       for (var i = 0; i < operationsOnly.length; i++) {
         var operation = operationsOnly[i];
@@ -127,11 +60,15 @@ document.addEventListener("DOMContentLoaded", function () {
           case "!":
             // NOT operation
             result = result.map((bit) => !bit);
+            binResult = binResult.map((bit) => !bit);
             break;
           case "&":
             // AND operation
             result = result.map(
               (bit, index) => bit && binArray[position][index],
+            );
+            binResult = binResult.map(
+              (bit, index) => bit && array[position][index],
             );
             break;
           case "|":
@@ -139,11 +76,17 @@ document.addEventListener("DOMContentLoaded", function () {
             result = result.map(
               (bit, index) => bit || binArray[position][index],
             );
+            binResult = binResult.map(
+              (bit, index) => bit || array[position][index],
+            );
             break;
           case "\\":
             // NOR operation
             result = result.map(
               (bit, index) => !(bit || binArray[position][index]),
+            );
+            binResult = binResult.map(
+              (bit, index) => !(bit || array[position][index]),
             );
             break;
           case "/":
@@ -151,17 +94,26 @@ document.addEventListener("DOMContentLoaded", function () {
             result = result.map(
               (bit, index) => bit !== binArray[position][index],
             );
+            binResult = binResult.map(
+              (bit, index) => bit !== array[position][index],
+            );
             break;
           case "-":
             // XNOR operation
             result = result.map(
               (bit, index) => bit === binArray[position][index],
             );
+            binResult = binResult.map(
+              (bit, index) => bit === array[position][index],
+            );
             break;
           case "$":
             // NAND operation
             result = result.map(
               (bit, index) => !(bit && binArray[position][index]),
+            );
+            binResult = binResult.map(
+              (bit, index) => !(bit && array[position][index]),
             );
             break;
           default:
@@ -170,29 +122,39 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       resultArray = [result]; // Update resultArray
+      binArrayResult = [binResult]; // Update resultArray
     } else {
       document.getElementById("ball").style.backgroundColor = "red";
       isValid = false;
     }
     console.log(resultArray);
+    console.log(binArrayResult);
   }
 
   // Create a paragraph for the output text
   var outputParagraph = document.createElement("p");
   outputParagraph.setAttribute("id", "outputText");
   document.body.appendChild(outputParagraph);
+  var outputText = document.createElement("p");
+  outputText.setAttribute("id", "outputParagraph");
+  document.body.appendChild(outputText);
 
   document.getElementById("submit").addEventListener("click", function () {
     var outputText = document.getElementById("outputText");
+    var outputParagraph = document.getElementById("outputParagraph");
 
     if (isValid) {
       console.log("Connection successful");
 
       // Convert boolean values in resultArray[0] to 0s and 1s
       var resultInBinary = resultArray[0].map((value) => (value ? 1 : 0));
+      var binResultInBinary = binArrayResult[0].map((value) => (value ? 1 : 0));
 
       outputText.textContent = "Output: " + resultInBinary;
+      outputParagraph.textContent = "Output: " + binResultInBinary;
+
       outputText.style.display = "block"; // Show the output text
+      outputParagraph.style.display = "block"; // Show the output text
     } else {
       console.log("Connection failed");
       outputText.style.display = "none"; // Hide the output text
@@ -205,7 +167,8 @@ document.addEventListener("DOMContentLoaded", function () {
     var numbers = [1, 2, 3, 4, 5];
 
     // Shuffle the array
-    for (var i = numbers.length - 1; i > 0; i--) {
+    var i;
+    for (i = numbers.length - 1; i > 0; i--) {
       var j = Math.floor(Math.random() * (i + 1));
       [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
     }
@@ -215,10 +178,13 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log(shuffledString);
 
     // Display images based on the shuffled order
-    for (var i = 0; i < shuffledString.length; i++) {
+    for (i = 0; i < shuffledString.length; i++) {
       var img = document.createElement("img");
+      var image = document.createElement("img");
       img.src = `img/${shuffledString[i]}.png`;
+      image.src = `img/${shuffledString[i]}.1.png`;
       document.body.appendChild(img);
+      document.body.appendChild(image);
       linking(shuffledString[i]);
     }
   }
