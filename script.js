@@ -131,6 +131,16 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log(binArrayResult);
   }
 
+  document
+    .getElementById("connectionInput")
+    .addEventListener("keypress", function (event) {
+      if (event.keyCode === 13) {
+        // 13 is the key code for Enter
+        event.preventDefault(); // Prevent the default action to stop the form from being submitted
+        document.getElementById("submit").click(); // Trigger the click event on the submit button
+      }
+    });
+
   // Create a paragraph for the output text
   var outputParagraph = document.createElement("p");
   outputParagraph.setAttribute("id", "outputText");
