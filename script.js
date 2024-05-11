@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   console.log(array);
 
+  document.getElementById("connectionInput").value = "";
   function handleInputChange() {
     var inputValue = document.getElementById("connectionInput").value;
     if (!inputValue) {
